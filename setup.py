@@ -6,10 +6,8 @@ setup(
     packages=find_packages(),
 
     author="Eddy",
- 
-    author_email="lesametlemax@gmail.com",
-
-    description="Proclame la bonne parole de sieurs Sam et Max",
+    
+    description="P",
     long_description=open('README.md').read(),
  
  
