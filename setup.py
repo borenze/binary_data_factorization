@@ -14,7 +14,7 @@ setup(
     include_package_data=True,
  
 
-    url='http://github.com/borenze/codes',
+    url='http://github.com/borenze/binazy_data_factorization',
  
     classifiers=[
         "Programming Language :: Python",
