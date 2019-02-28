@@ -1,5 +1,4 @@
 import numpy as np
-from sklearn.decomposition import NMF
 import time
 import matplotlib.pyplot as plt
 import statistics
