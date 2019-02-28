@@ -3,8 +3,6 @@ import codes
 
 setup(
     name='codes',
-    version=sm_lib.__version__,
- 
     packages=find_packages(),
 
     author="Eddy",
