@@ -1,21 +1,38 @@
-import setuptools
+from setuptools import setup, find_packages
+import codes
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+setup(
+    name='codes',
+    version=sm_lib.__version__,
+ 
+    packages=find_packages(),
 
-setuptools.setup(
-    name="example-pkg-your-username",
-    version="0.0.1",
-    author="Example Author",
-    author_email="author@example.com",
-    description="A small example package",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
-    packages=setuptools.find_packages(),
+    author="Eddy",
+ 
+    author_email="lesametlemax@gmail.com",
+
+    description="Proclame la bonne parole de sieurs Sam et Max",
+    long_description=open('README.md').read(),
+ 
+ 
+    include_package_data=True,
+ 
+
+    url='http://github.com/borenze/codes',
+ 
     classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python",
+        "Development Status :: 1 - Planning",
+        "License :: OSI Approved",
+        "Natural Language :: French",
         "Operating System :: OS Independent",
+        "Programming Language :: Python :: 2.7",
+        "Topic :: Communications",
     ],
+ 
+ 
+
+    license="WTFPL",
+
+ 
 )
