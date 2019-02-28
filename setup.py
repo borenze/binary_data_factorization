@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-import binary_data_factorization
+import codes
 
 setup(
     name='codes',
