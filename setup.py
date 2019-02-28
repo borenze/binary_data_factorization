@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-import codes
+import binary_data_factorization
 
 setup(
     name='codes',
@@ -14,7 +14,7 @@ setup(
     include_package_data=True,
  
 
-    url='http://github.com/borenze/binazy_data_factorization',
+    url='http://github.com/borenze/binary_data_factorization',
  
     classifiers=[
         "Programming Language :: Python",
