@@ -48,7 +48,7 @@ pip install -e .
 You can import BMF by doing
 
 ```python
-import BMF
+from codes import BMF
 ```
 
 The main function included in this package is `c_pnl_pf`. `c_pnl_pf` receives a numpy matrix and the wish rank as arguments and factorize it into two binary matrices. Here is example of its usage:
