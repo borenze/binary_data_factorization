@@ -108,7 +108,7 @@ def thresholding(X, W_ini, H_ini):
     II = np.max(H_ini)
     testh = np.linspace(0, II, int((II - 0) / 0.01))
     ll = np.max(W_ini)
-    testw = np.linspace(0, II, int((ll - 0) / 0.01))
+    testw = np.linspace(0, ll, int((ll - 0) / 0.01))
     temp = 10**10
     for i in range (len(testh)):
         for j in range (len(testw)):
