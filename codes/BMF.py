@@ -113,9 +113,9 @@ def thresholding(X, W_ini, H_ini):
     temp = 10**10
     for i in range (len(testh)):
         for j in range (len(testw)):
-            newH = signstar(H, testh[i])
-            newW = signstat(W, testw[j])
-            newtemp = utils.frobenius(X, np.dot(W, H.T))
+            newH = signstar(H_ini, testh[i])
+            newW = signstat(W_ini, testw[j])
+            newtemp = utils.frobenius(X, np.dot(newW, newH.T))
             if newtemp < temp:
                 temp = newtemp
                 h = testh[i]
