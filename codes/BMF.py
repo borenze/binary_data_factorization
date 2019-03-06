@@ -91,7 +91,7 @@ def create_quick_matrix(n_rows, n_columns, n_sources, density, recup=False, opt_
     
     '''
     
-    H = np.random.choice([0, 1], size = (n_sources, n_colums), p = [1-density, density])
+    H = np.random.choice([0, 1], size = (n_sources, n_columns), p = [1-density, density])
     W = np.random.choice([0, 1], size = (n_rows, n_sources), p = [1-density, density])
     X = np.dot(W,H)
     X [X>1] = 1
