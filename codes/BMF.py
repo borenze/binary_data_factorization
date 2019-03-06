@@ -52,7 +52,7 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False):
 
         H *= (gamma * np.dot((X * omega_W_H).T, W) + 3 * lamb * H**2 + beta * mat_sum_W / (sum_W_H**2)) / (gamma * np.dot(psi_W_H.T, W) + 2 * lamb * H**3 + lamb * H)
 
-        W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2)) / (gamma * np.dot(psi_W_H.T, H) + 2 * lamb * W**3 + lamb * W)
+        W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2)) / (gamma * np.dot(psi_W_H, H) + 2 * lamb * W**3 + lamb * W)
 
     H = utils.threshold(H, 0.5)
     W = utils.threshold(W, 0.5)
