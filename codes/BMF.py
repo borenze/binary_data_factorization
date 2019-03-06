@@ -8,7 +8,8 @@ import sys
 if not sys.warnoptions:
     warnings.simplefilter("ignore")
 
-
+__all__=['c_pnl_pf']
+    
 def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False):
     ''' 
     Factorize a binary matrix into two binary matrices 
