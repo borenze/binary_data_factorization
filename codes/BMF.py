@@ -10,7 +10,8 @@ if not sys.warnoptions:
 
 
 def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False):
-    ''' factorize a binary matrix into two binary matrices 
+    ''' 
+    Factorize a binary matrix into two binary matrices 
 
     Parameters
     ----------
@@ -43,7 +44,7 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False):
     for i in range (n_iter):
         WH = np.dot(W, H.T)
         omega_W_H = utils.calcul_exp_v(WH, gamma, 0.5) * (utils.sigmaf_v(WH, gamma, 0.5)**2)
-        psi_W_H = omega_W_H*utils.sigmaf_v(WH, gamma, 0.5)
+        psi_W_H = omega_W_H * utils.sigmaf_v(WH, gamma, 0.5)
 
         mat_sum_H = np.array([sum(H).tolist() for i in range(W.shape[0])])
         mat_sum_W = np.array([sum(W).tolist() for i in range(H.shape[0])])
@@ -57,40 +58,78 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False):
     W = utils.threshold(W, 0.5)
     return (W,H)
 
-def create_quick_matrix(n,m,k, param, recup=False, opt_print=False):
-    proportion=1-param
-    H = np.random.choice([0, 1], size = (k,m), p = [proportion, 1-proportion])
-    W = np.random.choice([0, 1], size = (n,k), p = [proportion, 1-proportion])
+def create_quick_matrix(n_rows, n_columns, n_sources, density, recup=False, opt_print=True):
+    '''
+    Create a numpy matrix array from sources generate randomly
+    (each elements of sources and abundances are a result of a 
+    Bernoulli)
+    
+    
+    Paramaters
+    ----------
+    n_rows : number of rows 
+    
+    n_columns : number of columns
+    
+    n_sources : number of sources
+    
+    density : Bernoulli parameter
+    
+    recup : if True he get the generated matrix and
+    the source and the abundance ones, if False you
+    get only the resulted matrix (default = False)
+    
+    opt_print : if True print the percent of ones 
+    in the resulted matrix (default = True)
+    
+    Examples
+    --------
+    
+    >>> X = create_quick_matrix(50, 50, 3, 0.4)
+    >>> X, W, H = create_quick_matrix(500, 100, 8, 0.2, recup = True)
+    
+    '''
+    
+    H = np.random.choice([0, 1], size = (n_sources, n_colums), p = [1-density, density])
+    W = np.random.choice([0, 1], size = (n_rows, n_sources), p = [1-density, density])
     X = np.dot(W,H)
     X [X>1] = 1
-    if opt_print==False:
-        print (sum(X.ravel())/(n*m)*100)
+    if opt_print==True:
+        print (sum(X.ravel())/(n_rows * n_colums) * 100)
     if recup == False:
         return X
     else: return (X, W, H)
 
 
-def thresholding(X,rank, gamma, w0, h0, n_iter, W_ini=False, H_ini=False):
-    ''' Algorithm of thresholding from Binary Matrix Factorization with Applications
+def thresholding(X, W_ini, H_ini):
+    ''' Algorithm of thresholding from Binary Matrix Factorization with Applications by Zhang
 
     '''
+    II = np.max(H_ini)
+    testh = np.linspace(0, II, int((II - 0) / 0.01))
+    ll = np.max(W_ini)
+    testw = np.linspace(0, II, int((ll - 0) / 0.01))
+    temp = 10**10
+    for i in range (len(testh)):
+        for j in range (len(testw)):
+            newH = signstar(H, testh[i])
+            newW = signstat(W, testw[j])
+            newtemp = utils.frobenius(X, np.dot(W, H.T))
+            if newtemp < temp:
+                temp = newtemp
+                h = testh[i]
+                w = testw[j]
+    return (w, h)        
 
-    if (W_ini == False or H_ini == False):
-        W_ini, H_ini, thash = non_negative_factorization(X, n_components=rank, solver='mu')
+def signstar(a, param):
+    ''' 
+    Function from Zhang
+    '''
+    a [a > param] =1
+    a [a <= param] = 0
+    return a
     
-    W, H = utils.normalization(W_ini, H_ini)
-    alpha_k = 1
     
-    for i in range (n_iter):
-        omega_W = gamma * utils.calcul_exp_v(W-w0, gamma, 0.5) * (utils.sigmaf_v(W-w0, gamma, 0.5)**2)
-        omega_H = gamma * utils.calcul_exp_v(H-h0, gamma, 0.5) * (utils.sigmaf_v(H-h0, gamma, 0.5)**2)
-        gk_1 = sum(((np.dot(X, H) - np.dot(np.dot(W, H), H.T)) * omega_W).ravel())
-        gk_2 = sum(((np.dot(W.T, X) - np.dot(np.dot(W.T, W), H)) * omega_H).ravel())
-
-        for decrease in range (n_iter_descrease):
-            d_k = 1/k^2
-            alpha_k = alpha_k - d_k * (sum(X * gamma * utils.calcul_exp_v(W-w0, gamma, 0.5) * (utils.sigmaf_v(W-w0, gamma, 0.5)**2)))
-
 def pf_zhang(X ,rank ,lamb ,nbiter=20, W_ini=False, H_ini=False, eps=10**(-1), esp_nn=10e-8, n_ini=1):
     '''
     Algorithm from Binary Matrix Factorization with Applications
