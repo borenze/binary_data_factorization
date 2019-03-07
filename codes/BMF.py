@@ -115,7 +115,7 @@ def thresholding(X, W_ini, H_ini):
             newW = signstar(W_ini, testw[j])
             X_res = np.dot(newW, newH.T)
             X_res [X_res > 1] = 1
-            newtemp = codes.utils.frobenius(X, X_res)
+            newtemp = utils.frobenius(X, X_res)
             if newtemp < temp:
                 temp = newtemp
                 h = testh[i]
