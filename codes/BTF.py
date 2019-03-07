@@ -92,7 +92,7 @@ def create_tensor(size_m, n_sources, density, recup=False):
     >>> res = create_tensor([50, 100, 140], 4, 0.4)
     >>> res2, sol = create_tensor([10, 15, 20, 25], 3, 0.1, recup=True)
     '''
-    dim = len(size)
+    dim = len(size_m)
     tens_temp = []
     sol = [[] for i in range (0,dim)]
     for i in range (n_sources):
