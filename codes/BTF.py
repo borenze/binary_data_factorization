@@ -26,17 +26,20 @@ def unfolding(X, mode):
     >>> unfold3 = unfolding(X, 2)
     '''
     
-    dim = len(X.shape)
-    list_non_mode = [i for i in range (0, dim)]
-    list_non_mode.remove(mode)
-    dim_temp = 1
-    for i in range (0, len(list_non_mode)):
-        dim_temp *= X.shape[list_non_mode[i]]
-    tenseur_unfold = np.empty([X.shape[mode], dim_temp])
-    for i in range (0, X.shape[mode]):
-        tenseur_unfold[i, :]=X[:, i, :, :].ravel()
-        
-    return(tenseur_unfold)
+    if mode==0:
+        tensor_unfold = np.zeros((X.shape[0], X.shape[1] * X.shape[2]))
+        for i in range (X.shape[2]):
+            tensor_unfold[:, i * X.shape[1] : (i + 1) * X.shape[1]] = X[:, :, i]
+    if mode==1:
+        tensor_unfold = np.zeros((X.shape[1], X.shape[0] * X.shape[2]))
+        for i in range (X.shape[2]):
+            tensor_unfold[:, i * X.shape[0]:(i+1) * X.shape[0]]=X[:, :, i].T
+    if mode==2:
+        tensor_unfold = np.zeros((X.shape[2], X.shape[0] * X.shape[1]))
+        for i in range (X.shape[2]):
+            tensor_unfold[i, :] = X[:, :, i].T.ravel()
+    
+    return(tensor_unfold)
 
 def rebuild_tensor(X):
     ''' giving matrices create tensor
