@@ -99,11 +99,10 @@ def create_quick_matrix(n_rows, n_columns, n_sources, density, recup=False, opt_
     if recup == False:
         return X
     else: return (X, W, H)
-
+    
 
 def thresholding(X, W_ini, H_ini):
     ''' Algorithm of thresholding from Binary Matrix Factorization with Applications by Zhang
-
     '''
     II = np.max(H_ini)
     testh = np.linspace(0, II, int((II - 0) / 0.01))
@@ -111,10 +110,12 @@ def thresholding(X, W_ini, H_ini):
     testw = np.linspace(0, ll, int((ll - 0) / 0.01))
     temp = 10**10
     for i in range (len(testh)):
-        for j in range (len(testw)):
-            newH = signstar(H_ini, testh[i])
+        newH = signstar(H_ini, testh[i])
+        for j in range (len(testw)):            
             newW = signstar(W_ini, testw[j])
-            newtemp = utils.frobenius(X, np.dot(newW, newH.T))
+            X_res = np.dot(newW, newH.T)
+            X_res [X_res > 1] = 1
+            newtemp = codes.utils.frobenius(X, X_res)
             if newtemp < temp:
                 temp = newtemp
                 h = testh[i]
@@ -126,9 +127,9 @@ def signstar(a, param):
     Function from Zhang
     '''
     b = copy.deepcopy(a)
-    b [a > param] = 1
+    b = b * 0
+    b [a >= param] =1
     return b
-    
     
 def pf_zhang(X ,rank ,lamb ,nbiter=20, W_ini=False, H_ini=False, eps=10**(-1), esp_nn=10e-8, n_ini=1):
     '''
