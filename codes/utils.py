@@ -135,8 +135,9 @@ def threshold(X, tau):
     tau : parameter of threshold
 
 	'''
+	X [X <= tau] = 0
 	X [X > tau] = 1
-	X [X < tau] = 0
+	
 	return X
 
 
