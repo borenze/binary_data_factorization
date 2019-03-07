@@ -66,31 +66,57 @@ def rebuild_tensor(X):
     res [res > 1] = 1
     
     return (res)
-def create_tensor(size, rank, ):
-    ''' create a N-way array from '''
+
+
+def create_tensor(size_m, n_sources, density, recup=False):
+    ''' create a N-way array from any number of sources generate via Bernoulli
+    Parameters
+    ----------
+    size_m : a list with the number of rows wishes for each matrix 
+    
+    rank : the number of sources 
+    
+    density : Bernoulli parameter (between 0 and 1)
+    
+    recup : if True returns the matrices and the tensor, else returns only 
+    the tensor (default = False)
+    
+    Returns
+    -------
+    res : a N-way array (N=n_sources)
+    
+    sol : a list of matrices (if recup==True)
+    
+    Examples
+    --------
+    >>> res = create_tensor([50, 100, 140], 4, 0.4)
+    >>> res2, sol = create_tensor([10, 15, 20, 25], 3, 0.1, recup=True)
+    '''
     dim = len(size)
-    tens_temp=[]
-    sol=[[] for i in range (0,dim)]
-    for i in range (0,rang):
+    tens_temp = []
+    sol = [[] for i in range (0,dim)]
+    for i in range (n_sources):
         
-        v_end_1=np.random.choice([0,1], size=(1,tailles[dim-2]), p=[proportion, 1-proportion])
-        v_end_1=v_end_1.astype(float)
-        v_end=np.random.choice([0,1], size=(1,tailles[dim-1]), p=[proportion, 1-proportion])
+        v_end_1 = np.random.choice([0, 1], size = (1, size_m[dim - 2]), p = [1 - density, density])
+        v_end_1 = v_end_1.astype(float)
+        v_end=np.random.choice([0,1], size = (1, size_m[dim - 1]), p = [1 - density, density])
         v_end=v_end.astype(float)
         res_temp = np.outer(v_end_1, v_end)
         sol[dim-1].append(v_end.tolist()[0])
         sol[dim-2].append(v_end_1.tolist()[0])
         
         for j in range (dim-3,-1,-1):
-            v_temp=np.random.choice([0,1], size=(1,tailles[j]), p=[proportion, 1-proportion])
-            v_temp=v_temp.astype(float)
+            v_temp = np.random.choice([0,1], size = (1, size_m[j]), p = [1 - density, density])
+            v_temp = v_temp.astype(float)
             sol[j].append(v_temp.tolist()[0])
             res_temp = np.array([[res_temp*i][0] for i in v_temp.ravel()])
         tens_temp.append(res_temp)
     res = tens_temp[0]
-    for i in range (1, rang):
+    for i in range (1, n_sources):
         res += tens_temp[i]
     res [res >1] = 1
+    if recup == False:
+        return res
     return (res, sol)
         
     
