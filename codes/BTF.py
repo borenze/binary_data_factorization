@@ -30,8 +30,8 @@ def unfolding(X, mode):
     list_non_mode = [i for i in range (0, dim)]
     list_non_mode.remove(mode)
     dim_temp = 1
-    for i in range (0, len(liste_non_mode)):
-        dim_temp *= X.shape[liste_non_mode[i]]
+    for i in range (0, len(list_non_mode)):
+        dim_temp *= X.shape[list_non_mode[i]]
     tenseur_unfold = np.empty([X.shape[mode], dim_temp])
     for i in range (0, X.shape[mode]):
         tenseur_unfold[i, :]=X[:, i, :, :].ravel()
