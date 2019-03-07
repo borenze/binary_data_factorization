@@ -1,6 +1,6 @@
 from . import utils
 
-
+import copy
 import numpy as np 
 from sklearn.decomposition import non_negative_factorization
 import warnings
@@ -125,9 +125,9 @@ def signstar(a, param):
     ''' 
     Function from Zhang
     '''
-    a [a > param] =1
-    a [a <= param] = 0
-    return a
+    b = copy.deepcopy(a)
+    b [a > param] = 1
+    return b
     
     
 def pf_zhang(X ,rank ,lamb ,nbiter=20, W_ini=False, H_ini=False, eps=10**(-1), esp_nn=10e-8, n_ini=1):
