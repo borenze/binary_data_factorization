@@ -4,6 +4,7 @@ from . import BMF
 import tensorly as tl
 import tensorly.decomposition as td
 import tensorly.tenalg as tt
+import numpy as np
 
 def unfolding(X, mode):
     ''' unfold a three-way array
