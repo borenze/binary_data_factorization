@@ -45,7 +45,7 @@ def create_quick_matrix(n_rows, n_columns, n_sources, density, recup=False, opt_
     X = np.dot(W, H)
     X [X > 1] = 1
     if opt_print == True:
-        print("The matrix have ",sum(X.ravel())/(n_rows * n_columns) * 100, "% of ones.")
+        print("The matrix have",round(sum(X.ravel())/(n_rows * n_columns) * 100, 2), "% of ones.")
     if recup == False:
         return X
     else: return (X, W, H)
