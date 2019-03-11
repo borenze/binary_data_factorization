@@ -52,7 +52,7 @@ The main function included in this package is `c_pnl_pf`. `c_pnl_pf` receives a 
 
 ```python
 X = BMF.create_quick_matrix(50, 50, 3, 0.2) #create a 50 x 50 matrix from 3 sources
-W, H = BMF.c_pnl_pf(X, rank = 3)
+W, H = BMF.c_pnl_pf(X, rank = 3) #factorize X into two binary matrices 
 ```
 
 
