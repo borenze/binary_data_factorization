@@ -7,6 +7,7 @@ import tensorly.tenalg as tt
 import numpy as np
 import copy
 import warnings
+import sys
 from numpy.linalg import inv
 if not sys.warnoptions:
     warnings.simplefilter("ignore")
