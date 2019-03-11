@@ -11,73 +11,8 @@ import sys
 from numpy.linalg import inv
 if not sys.warnoptions:
     warnings.simplefilter("ignore")
-
-def unfolding(X, mode):
-    ''' unfold a three-way array
     
-    Parameters
-    ----------
-    X : a three-way array
     
-    mode : the axe of unfolding
-    
-    Return
-    ------
-    tensor_unfold : a numpy matrix
-    
-    Examples
-    --------
-    >>> unfold1 = unfolding(X, 0)
-    >>> unfold2 = unfolding(X, 1)
-    >>> unfold3 = unfolding(X, 2)
-    '''
-    
-    if mode==0:
-        tensor_unfold = np.zeros((X.shape[0], X.shape[1] * X.shape[2]))
-        for i in range (X.shape[2]):
-            tensor_unfold[:, i * X.shape[1] : (i + 1) * X.shape[1]] = X[:, :, i]
-    if mode==1:
-        tensor_unfold = np.zeros((X.shape[1], X.shape[0] * X.shape[2]))
-        for i in range (X.shape[2]):
-            tensor_unfold[:, i * X.shape[0]:(i+1) * X.shape[0]]=X[:, :, i].T
-    if mode==2:
-        tensor_unfold = np.zeros((X.shape[2], X.shape[0] * X.shape[1]))
-        for i in range (X.shape[2]):
-            tensor_unfold[i, :] = X[:, :, i].T.ravel()
-    
-    return(tensor_unfold)
-
-def rebuild_tensor(X):
-    ''' giving matrices create tensor
-    Parameter
-    ---------        
-    X : a list of numpy matrices 
-       
-    Return
-    ------
-    T : a tensor
-        
-    Example
-    -------
-    >>> T = rebuild(X)
-    '''
-    
-    dim = len(X)
-    rank = X[0].shape[1]
-    tensor_temp = []
-    for i in range (rank):
-        res_temp = np.outer(X[dim-2][:, i], X[dim-1][:, i])
-        for j in range (dim - 3, -1, -1):
-            res_temp = np.array([[res_temp * i][0] for i in X[j][:, i]])
-        tensor_temp.append(res_temp)
-    res = tens_temp[0]
-    for i in range (1, rank):
-        res += temp_temp[i]
-    res [res > 1] = 1
-    
-    return (res)
-
-
 def create_tensor(size_m, n_sources, density, recup=False):
     ''' create a N-way array from any number of sources generate via Bernoulli
     Parameters
@@ -128,6 +63,46 @@ def create_tensor(size_m, n_sources, density, recup=False):
     if recup == False:
         return res
     return (res, sol)
+
+
+def unfolding(X, mode):
+    ''' unfold a three-way array
+    
+    Parameters
+    ----------
+    X : a three-way array
+    
+    mode : the axe of unfolding
+    
+    Return
+    ------
+    tensor_unfold : a numpy matrix
+    
+    Examples
+    --------
+    >>> unfold1 = unfolding(X, 0)
+    >>> unfold2 = unfolding(X, 1)
+    >>> unfold3 = unfolding(X, 2)
+    '''
+    
+    if mode==0:
+        tensor_unfold = np.zeros((X.shape[0], X.shape[1] * X.shape[2]))
+        for i in range (X.shape[2]):
+            tensor_unfold[:, i * X.shape[1] : (i + 1) * X.shape[1]] = X[:, :, i]
+    if mode==1:
+        tensor_unfold = np.zeros((X.shape[1], X.shape[0] * X.shape[2]))
+        for i in range (X.shape[2]):
+            tensor_unfold[:, i * X.shape[0]:(i+1) * X.shape[0]]=X[:, :, i].T
+    if mode==2:
+        tensor_unfold = np.zeros((X.shape[2], X.shape[0] * X.shape[1]))
+        for i in range (X.shape[2]):
+            tensor_unfold[i, :] = X[:, :, i].T.ravel()
+    
+    return(tensor_unfold)
+
+
+
+
         
 def t_pnl_pf(X, rank, n_iter, gamma, lamb, eps, init = False, normalize_opt = False):
     ''' 
@@ -185,3 +160,32 @@ def t_pnl_pf(X, rank, n_iter, gamma, lamb, eps, init = False, normalize_opt = Fa
     
     return (init)
 
+def rebuild_tensor(X):
+    ''' giving matrices create tensor
+    Parameter
+    ---------        
+    X : a list of numpy matrices 
+       
+    Return
+    ------
+    T : a tensor
+        
+    Example
+    -------
+    >>> T = rebuild(X)
+    '''
+    
+    dim = len(X)
+    rank = X[0].shape[1]
+    tensor_temp = []
+    for i in range (rank):
+        res_temp = np.outer(X[dim-2][:, i], X[dim-1][:, i])
+        for j in range (dim - 3, -1, -1):
+            res_temp = np.array([[res_temp * i][0] for i in X[j][:, i]])
+        tensor_temp.append(res_temp)
+    res = tens_temp[0]
+    for i in range (1, rank):
+        res += temp_temp[i]
+    res [res > 1] = 1
+    
+    return (res)
