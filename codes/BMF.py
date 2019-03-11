@@ -25,7 +25,7 @@ def create_quick_matrix(n_rows, n_columns, n_sources, density, recup=False, opt_
     
     density : Bernoulli parameter
     
-    recup : if True he get the generated matrix and
+    recup : if True you get the generated matrix and
     the source and the abundance ones, if False you
     get only the resulted matrix (default = False)
     
@@ -70,7 +70,8 @@ def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_
     
     noise : noise parameter (close to 0 for almost empty noise matrix close to 1 for full noise matrix)
     
-    recup_genenrated_matrices : if True he get the source and the abundance matrices, if False you won't (default = False)
+    recup_genenrated_matrices : if True you get the source and the abundance matrices,
+                                if False you don't (default = False)
     
     recup_start : if True you get noiseless matrix if False you don't (default = True)
     
