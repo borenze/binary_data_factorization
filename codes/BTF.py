@@ -5,6 +5,11 @@ import tensorly as tl
 import tensorly.decomposition as td
 import tensorly.tenalg as tt
 import numpy as np
+import copy
+import warnings
+from numpy.linalg import inv
+if not sys.warnoptions:
+    warnings.simplefilter("ignore")
 
 def unfolding(X, mode):
     ''' unfold a three-way array
@@ -98,7 +103,7 @@ def create_tensor(size_m, n_sources, density, recup=False):
     '''
     dim = len(size_m)
     tens_temp = []
-    sol = [[] for i in range (0,dim)]
+    sol = [[] for i in range (0, dim)]
     for i in range (n_sources):
         
         v_end_1 = np.random.choice([0, 1], size = (1, size_m[dim - 2]), p = [1 - density, density])
@@ -113,15 +118,67 @@ def create_tensor(size_m, n_sources, density, recup=False):
             v_temp = np.random.choice([0,1], size = (1, size_m[j]), p = [1 - density, density])
             v_temp = v_temp.astype(float)
             sol[j].append(v_temp.tolist()[0])
-            res_temp = np.array([[res_temp*i][0] for i in v_temp.ravel()])
+            res_temp = np.array([[res_temp * i][0] for i in v_temp.ravel()])
         tens_temp.append(res_temp)
     res = tens_temp[0]
     for i in range (1, n_sources):
         res += tens_temp[i]
-    res [res >1] = 1
+    res [res > 1] = 1
     if recup == False:
         return res
     return (res, sol)
         
+def t_pnl_pf(X, rank, n_iter, gamma, lamb, eps, init = False, normalize_opt = False):
+    ''' 
+    Factorize a n order binary tensor into n binary matrices 
+
+    Parameters
+    ----------
+    X : binary numpy tensor 
     
+    rank : wishes rank of decomposition
+
+    n_iter : maximum of iterations if our stop criteron is not satisfied
+
+    gamma : curvature modifier for sigmoid function
+
+    lamb : binary penalty
+
+    beta : maximal support penalty
+
+    eps : tolerated error for stop criteron
+
+    init : list of initialisation matrices 
+
+    '''
+    dim = len(X.shape)
+
+    if (init == False):
+        init = td.non_negative_parafac(X, rank=rank)
+
+    if normalize_opt == True:
+        for i in range (dim):
+            for j in range (rank):
+                init[i][:,j] = init[i][:,j]/np.max(init[i][:,j])
+                # this option hightly denature our init structure
+    unfold_tensor = [unfolding(X, i) for i in range (dim)]               
+
+    for k in range (n_iter):
+        for j in range (dim):
+            
+            list_ind = [i for i in range (dim)] # we create a list of indices for take the right matrices in each Khatri-Rao product
+            list_ind.remove(j)
+            KR_product = tt.khatri_rao(matrices = [init[i] for i in list_ind[::-1]])
+            WH = np.dot(init[j], KR_product.T)
+            
+            omega_W_H = utils.calcul_exp_v(WH, gamma, 0.5) * (utils.sigmaf_v(WH, gamma, 0.5)**2)
+            psi_W_H = omega_W_H * utils.sigmaf_v(WH, gamma, 0.5)
+            
+            init[j] *= (gamma * np.dot((unfold[j] * omega_W_H).T, KR_product) + 3 * lamb * init[j]**2) / (gamma * np.dot(psi_W_H.T, KR_product) + 2 * lamb * init[j]**3 + lamb * init[j])
+            
+    
+    for i in range (dim):
+        init[i] = utils.threshold(init[i], 0.5)
+    
+    return (init)
 
