@@ -193,7 +193,7 @@ def bt_admm(X, rank, n_iter, n_intern1, n_intern2, alpha, alpha2, gamma, lamb, e
         for i in range (dim):
             for j in range (rank):
                 init[i][:,j] = init[i][:,j]/np.max(init[i][:,j])
-                # this option hightly denature our init structure
+                # this option hightly denature our init structure but constrains initialization elements between 0 and 1
     unfold_tensor = [unfolding(X, i) for i in range (dim)]  
     init_barre=copy.deepcopy(init) # We initialize \bar{W}, \bar{H} and \bar{V} 
     tensor_temp=[]
@@ -205,7 +205,7 @@ def bt_admm(X, rank, n_iter, n_intern1, n_intern2, alpha, alpha2, gamma, lamb, e
             for intern in range (n_intern1):
                 list_ind = [i for i in range (dim)]
                 list_ind.remove(j)
-                KR_product = tt.khatri_rao(matrices=[init[i] for i in liste_ind[::-1]])
+                KR_product = tt.khatri_rao(matrices=[init[i] for i in list_ind[::-1]])
                 for intern1 in range (n_intern2):
                     WH = np.dot(init_barre[j], KR_product.T)
                     omega_W_H = utils.calcul_exp_v(WH, gamma, 0.5) * (utils.sigmaf_v(WH, gamma, 0.5)**2)
