@@ -203,7 +203,7 @@ def pf_zhang(X ,rank ,lamb ,nbiter=20, W_ini=False, H_ini=False, eps=10**(-1), e
         H *= (np.dot(X.T, W) + 3 * lamb * H**2) / (np.dot(np.dot(H, W.T), W) + 2 * lamb * H**3 + lamb * H + esp_nn)
         W *= (np.dot(X, H) + 3 * lamb * W**2) / (np.dot(np.dot(W, H.T), H) + 2 * lamb * W**3 + lamb * W + esp_nn)
 
-        if sum(((H**2 - H)**2).ravel()+((W**2 - W)**2).ravel()) < eps:
+        if sum(sum(((H**2 - H)**2).ravel())+sum(((W**2 - W)**2).ravel())) < eps:
             W = utils.threshold(W, 0.5)
             H = utils.threshold(H, 0.5)            
             return (W,H)
