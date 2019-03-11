@@ -90,9 +90,10 @@ def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_
     
     '''
     if recup_generated_matrices == True:
-        X, W, H = create_quick_matrix(n_rows, n_columns, n_sources, density, recup = True, opt_print = opt_print)
-    else: X = create_quick_matrix(n_rows, n_columns, n_sources, density, opt_print = opt_print)
-        
+        X, W, H = create_quick_matrix(n_rows, n_columns, n_sources, density, recup = True, opt_print = False)
+    else: X = create_quick_matrix(n_rows, n_columns, n_sources, density, opt_print = False)
+    if opt_print == True:
+        print("The noiseless matrix have",round(sum(X.ravel())/(n_rows * n_columns) * 100, 2), "% of ones.")
     noise= np.random.choice([0, 1], size=(X.shape[0],X.shape[1]), p=[1-noise, noise])
     X_noise = X + noise
     X_noise [X_noise > 1] = 0
