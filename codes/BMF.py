@@ -45,7 +45,7 @@ def create_quick_matrix(n_rows, n_columns, n_sources, density, recup=False, opt_
     X = np.dot(W, H)
     X [X > 1] = 1
     if opt_print == True:
-        print(sum(X.ravel())/(n_rows * n_columns) * 100)
+        print("The matrix have ",sum(X.ravel())/(n_rows * n_columns) * 100, "% of ones.")
     if recup == False:
         return X
     else: return (X, W, H)
@@ -86,7 +86,7 @@ def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_
     --------
     
     >>> X_noise, X = create_noise_matrix_xor(50, 50, 3, 0.4, 0.1)
-    >>> X_noise, X, W, H = create_noise_matrix_xor(500, 100, 8, 0.2, recup_generated_matrices = True)
+    >>> X_noise, X, W, H = create_noise_matrix_xor(500, 100, 8, 0.2, noise=0.3, recup_generated_matrices = True, opt_print = True)
     
     '''
     if recup_generated_matrices == True:
