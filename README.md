@@ -51,7 +51,8 @@ from codes import BMF
 The main function included in this package is `c_pnl_pf`. `c_pnl_pf` receives a numpy matrix and the wish rank as arguments and factorize it into two binary matrices. Here is example of its usage:
 
 ```python
-W, H = BMF.c_pnl_pf(X, rank=3)
+X = BMF.create_quick_matrix(50, 50, 3, 0.2) #create a 50 x 50 matrix from 3 sources
+W, H = BMF.c_pnl_pf(X, rank = 3)
 ```
 
 
