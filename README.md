@@ -11,6 +11,8 @@
 Dependencies:
  -   [NumPy](http://www.numpy.org)
  -   [SciPy](https://www.scipy.org)
+ -   [Scikit-learn] (https://scikit-learn.org/stable/index.html)
+ 
 
 ```shell
 pip install numpy scipy 
