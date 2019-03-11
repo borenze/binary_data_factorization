@@ -160,6 +160,73 @@ def t_pnl_pf(X, rank, n_iter, gamma, lamb, eps, init = False, normalize_opt = Fa
     
     return (init)
 
+
+def bt_admm(X, rank, n_iter, n_intern1, n_intern2, alplha, alpha2, gamma, lamb, eps, init = False, normalize_opt = False):
+    ''' 
+    Factorize a n order binary tensor into n binary matrices 
+
+    Parameters
+    ----------
+    X : binary numpy tensor 
+    
+    rank : wishes rank of decomposition
+
+    n_iter : maximum of iterations if our stop criteron is not satisfied
+
+    gamma : curvature modifier for sigmoid function
+
+    lamb : binary penalty
+
+    beta : maximal support penalty
+
+    eps : tolerated error for stop criteron
+
+    init : list of initialisation matrices 
+
+    '''
+    dim = len(X.shape)
+
+    if (init == False):
+        init = td.non_negative_parafac(X, rank=rank)
+
+    if normalize_opt == True:
+        for i in range (dim):
+            for j in range (rank):
+                init[i][:,j] = init[i][:,j]/np.max(init[i][:,j])
+                # this option hightly denature our init structure
+    unfold_tensor = [unfolding(X, i) for i in range (dim)]  
+    init_barre=copy.deepcopy(init) # We initialize \bar{W}, \bar{H} and \bar{V} 
+    tensor_temp=[]
+    for j in range(dim):
+        tenseur_temp.append(init[j] * 0) # We initialize matrices called A, B and C in the reference
+        
+    for k in range(n_iter):
+        for j in range (dim):
+            list_ind = [i for i in range (dim)]
+            list_ind.remove(j)
+            KR_product = tt.khatri_rao(matrices=[init[i] for i in liste_ind[::-1]])
+            for intern1 in range (n_itern1):
+                WH = np.dot(init_barre[j], KR_product.T)
+                omega_W_H = utils.calcul_exp_v(WH, gamma, 0.5) * (utils.sigmaf_v(WH, gamma, 0.5)**2)
+                psi_W_H = omega_W_H * utils.sigmaf_v(WH, gamma, 0.5)
+                init_barre[j] = init_barre[j] - alpha * (- gamma * (np.dot(depli[j] * omega_W_H, KR_product))\
+                                + gamma * np.dot(psi_W_H, KR_product) - rho * (init[j] - init_barre[j] + tensor_temp[j]))
+            for intern2 in range (n_itern2):
+                init[j] = init[j] - alpha2 * (lamb * (init[j] - 3 * init[j]**2 + 2 * init[j]**3) + rho\
+                                             * (init[j] - init_barre[j] + tensor_temp[j]))
+            tensor_temp[j] = tensor_temp[j] + init[j] - init_barre[j]
+    for i in range dim:
+        for j in range rang:
+            init[i][:,j] = init[i][:,j]/np.max(init[i][:,j])
+            
+    for i in range dim:
+        init[j] = utils.threshold(init[j], 0.5)
+    return init
+    
+
+
+
+
 def rebuild_tensor(X):
     ''' giving matrices create tensor
     Parameter
