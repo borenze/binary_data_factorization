@@ -215,11 +215,11 @@ def bt_admm(X, rank, n_iter, n_intern1, n_intern2, alplha, alpha2, gamma, lamb, 
                 init[j] = init[j] - alpha2 * (lamb * (init[j] - 3 * init[j]**2 + 2 * init[j]**3) + rho\
                                              * (init[j] - init_barre[j] + tensor_temp[j]))
             tensor_temp[j] = tensor_temp[j] + init[j] - init_barre[j]
-    for i in range dim:
-        for j in range rang:
+    for i in range (dim):
+        for j in range (rank):
             init[i][:,j] = init[i][:,j]/np.max(init[i][:,j])
             
-    for i in range dim:
+    for i in range (dim):
         init[j] = utils.threshold(init[j], 0.5)
     return init
     
