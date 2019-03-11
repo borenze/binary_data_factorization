@@ -218,7 +218,7 @@ def bt_admm(X, rank, n_iter, n_intern1, n_intern2, alpha, alpha2, gamma, lamb, r
                 tensor_temp[j] = tensor_temp[j] + init[j] - init_barre[j]
     for i in range (dim):
         for j in range (rank):
-            print(np.max(init[i][:,j]
+            print(np.max(init[i][:,j])
             init[i][:,j] = init[i][:,j]/np.max(init[i][:,j])
             
     for j in range (dim):
