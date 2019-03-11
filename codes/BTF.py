@@ -210,7 +210,7 @@ def bt_admm(X, rank, n_iter, n_intern1, n_intern2, alpha, alpha2, gamma, lamb, e
                     WH = np.dot(init_barre[j], KR_product.T)
                     omega_W_H = utils.calcul_exp_v(WH, gamma, 0.5) * (utils.sigmaf_v(WH, gamma, 0.5)**2)
                     psi_W_H = omega_W_H * utils.sigmaf_v(WH, gamma, 0.5)
-                    init_barre[j] = init_barre[j] - alpha * (- gamma * (np.dot(depli[j] * omega_W_H, KR_product))\
+                    init_barre[j] = init_barre[j] - alpha * (- gamma * (np.dot(unfold_tensor[j] * omega_W_H, KR_product))\
                                     + gamma * np.dot(psi_W_H, KR_product) - rho * (init[j] - init_barre[j] + tensor_temp[j]))
                 for intern2 in range (n_intern2):
                     init[j] = init[j] - alpha2 * (lamb * (init[j] - 3 * init[j]**2 + 2 * init[j]**3) + rho\
