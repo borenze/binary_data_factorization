@@ -170,6 +170,7 @@ def t_pnl_pf(X, rank, n_iter, gamma, lamb, eps, init = False, normalize_opt = Fa
             list_ind = [i for i in range (dim)] # we create a list of indices for take the right matrices in each Khatri-Rao product
             list_ind.remove(j)
             KR_product = tt.khatri_rao(matrices = [init[i] for i in list_ind[::-1]])
+            print(KR_product.shape)
             WH = np.dot(init[j], KR_product.T)
             
             omega_W_H = utils.calcul_exp_v(WH, gamma, 0.5) * (utils.sigmaf_v(WH, gamma, 0.5)**2)
