@@ -185,7 +185,7 @@ def rebuild_tensor(X):
         tensor_temp.append(res_temp)
     res = tensor_temp[0]
     for i in range (1, rank):
-        res += temp_temp[i]
+        res += tensor_temp[i]
     res [res > 1] = 1
     
     return (res)
