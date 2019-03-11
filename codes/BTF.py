@@ -170,14 +170,14 @@ def t_pnl_pf(X, rank, n_iter, gamma, lamb, eps, init = False, normalize_opt = Fa
             list_ind = [i for i in range (dim)] # we create a list of indices for take the right matrices in each Khatri-Rao product
             list_ind.remove(j)
             KR_product = tt.khatri_rao(matrices = [init[i] for i in list_ind[::-1]])
-            print(KR_product.shape)
+        
             WH = np.dot(init[j], KR_product.T)
             
             omega_W_H = utils.calcul_exp_v(WH, gamma, 0.5) * (utils.sigmaf_v(WH, gamma, 0.5)**2)
             psi_W_H = omega_W_H * utils.sigmaf_v(WH, gamma, 0.5)
-            print(omega_W_H.shape, psi_W_H.shape)
+      
             
-            init[j] *= (gamma * np.dot((unfold_tensor[j] * omega_W_H).T, KR_product) + 3 * lamb * init[j]**2) / (gamma * np.dot(psi_W_H, KR_product) + 2 * lamb * init[j]**3 + lamb * init[j])
+            init[j] *= (gamma * np.dot((unfold_tensor[j] * omega_W_H), KR_product) + 3 * lamb * init[j]**2) / (gamma * np.dot(psi_W_H, KR_product) + 2 * lamb * init[j]**3 + lamb * init[j])
             
     
     for i in range (dim):
