@@ -6,13 +6,16 @@
 
 ### Pre requierments
 
-[Binary data factorization] requires a previous installation of radioactive filters in your machine. You can do it on linux by executing
+[Binary data factorization] works with Python 3.7+.
 
-```bash
-sudo apt-get radioactive-filters
+Dependencies:
+ -   [NumPy](http://www.numpy.org)
+ -   [SciPy](https://www.scipy.org)
+
+```shell
+pip install numpy scipy 
 ```
 
-or in mac and windows by following the instructions on this webpage: http://cool.radioactive.filters
 
 ### Install using `pip`
 
