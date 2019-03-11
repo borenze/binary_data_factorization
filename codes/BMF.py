@@ -90,7 +90,7 @@ def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_
     
     '''
     if recup_generated_matrices == True:
-        X, W, H = create_quick_matrix(n_rows, n_colums, n_sources, density, recup = True)
+        X, W, H = create_quick_matrix(n_rows, n_columns, n_sources, density, recup = True)
     else: X = create_quick_matrix(n_rows, n_colums, n_sources, density)
     noise= np.random.choice([0, 1], size=(X.shape[0],X.shape[1]), p=[1-noise, noise])
     X_noise = X + noise
