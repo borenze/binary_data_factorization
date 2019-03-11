@@ -8,6 +8,100 @@ import sys
 if not sys.warnoptions:
     warnings.simplefilter("ignore")
 
+def create_quick_matrix(n_rows, n_columns, n_sources, density, recup=False, opt_print=True):
+    '''
+    Create a numpy matrix from sources generate randomly
+    (each elements of sources and abundances are a result of a 
+    Bernoulli)
+    
+    
+    Paramaters
+    ----------
+    n_rows : number of rows 
+    
+    n_columns : number of columns
+    
+    n_sources : number of sources
+    
+    density : Bernoulli parameter
+    
+    recup : if True he get the generated matrix and
+    the source and the abundance ones, if False you
+    get only the resulted matrix (default = False)
+    
+    opt_print : if True print the percent of ones 
+    in the resulted matrix (default = True)
+    
+    Examples
+    --------
+    
+    >>> X = create_quick_matrix(50, 50, 3, 0.4)
+    >>> X, W, H = create_quick_matrix(500, 100, 8, 0.2, recup = True)
+    
+    '''
+    
+    H = np.random.choice([0, 1], size = (n_sources, n_columns), p = [1-density, density])
+    W = np.random.choice([0, 1], size = (n_rows, n_sources), p = [1-density, density])
+    X = np.dot(W, H)
+    X [X > 1] = 1
+    if opt_print == True:
+        print(sum(X.ravel())/(n_rows * n_columns) * 100)
+    if recup == False:
+        return X
+    else: return (X, W, H)
+    
+
+def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_start = True, recup_generated_matrices = False, opt_print = False):
+    '''
+    Create a numpy matrix from sources generate randomly
+    (each elements of sources and abundances are a result of a 
+    Bernoulli) with a xor noise
+    
+    
+    Paramaters
+    ----------
+    n_rows : number of rows 
+    
+    n_columns : number of columns
+    
+    n_sources : number of sources
+    
+    density : Bernoulli parameter
+    
+    noise : noise parameter (close to 0 for almost empty noise matrix close to 1 for full noise matrix)
+    
+    recup_genenrated_matrices : if True he get the source and the abundance matrices, if False you won't (default = False)
+    
+    recup_start : if True you get noiseless matrix if False you don't (default = True)
+    
+    Returns
+    -------
+    X_noise : a matrix 
+    
+    X : a matrix (if recup_start == True)
+    
+    W, H : two matrices (if recup_generated_matrices == True)
+    
+    Examples
+    --------
+    
+    >>> X_noise, X = create_noise_matrix_xor(50, 50, 3, 0.4, 0.1)
+    >>> X_noise, X, W, H = create_noise_matrix_xor(500, 100, 8, 0.2, recup_generated_matrices = True)
+    
+    '''
+    if recup_generated_matrices == True:
+        X, W, H = create_quick_matrix(n_rows, n_colums, n_sources, density, recup = True)
+    else: X = create_quick_matrix(n_rows, n_colums, n_sources, density)
+    noise= np.random.choice([0, 1], size=(X.shape[0],X.shape[1]), p=[1-noise, noise])
+    X_noise = X + noise
+    X_noise [X_noise > 1] = 0
+    if recup_generated_matrices == True:
+        if recup_start == True:
+            return (X_noise, X, W, H)
+        return (X_noise, W, H)
+    if recup_start == True:
+        return(X_noise, X)
+    return X_noise
     
 def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False):
     ''' 
@@ -58,48 +152,6 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False):
     W = utils.threshold(W, 0.5)
     return (W,H)
 
-def create_quick_matrix(n_rows, n_columns, n_sources, density, recup=False, opt_print=True):
-    '''
-    Create a numpy matrix array from sources generate randomly
-    (each elements of sources and abundances are a result of a 
-    Bernoulli)
-    
-    
-    Paramaters
-    ----------
-    n_rows : number of rows 
-    
-    n_columns : number of columns
-    
-    n_sources : number of sources
-    
-    density : Bernoulli parameter
-    
-    recup : if True he get the generated matrix and
-    the source and the abundance ones, if False you
-    get only the resulted matrix (default = False)
-    
-    opt_print : if True print the percent of ones 
-    in the resulted matrix (default = True)
-    
-    Examples
-    --------
-    
-    >>> X = create_quick_matrix(50, 50, 3, 0.4)
-    >>> X, W, H = create_quick_matrix(500, 100, 8, 0.2, recup = True)
-    
-    '''
-    
-    H = np.random.choice([0, 1], size = (n_sources, n_columns), p = [1-density, density])
-    W = np.random.choice([0, 1], size = (n_rows, n_sources), p = [1-density, density])
-    X = np.dot(W,H)
-    X [X>1] = 1
-    if opt_print==True:
-        print (sum(X.ravel())/(n_rows * n_columns) * 100)
-    if recup == False:
-        return X
-    else: return (X, W, H)
-    
 
 def thresholding(X, W_ini, H_ini):
     ''' Algorithm of thresholding from Binary Matrix Factorization with Applications by Zhang
