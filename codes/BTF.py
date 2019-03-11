@@ -220,7 +220,7 @@ def bt_admm(X, rank, n_iter, n_intern1, n_intern2, alpha, alpha2, gamma, lamb, r
         for j in range (rank):
             init[i][:,j] = init[i][:,j]/np.max(init[i][:,j])
             
-    for i in range (dim):
+    for j in range (dim):
         init[j] = utils.threshold(init[j], 0.5)
     return init
     
