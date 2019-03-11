@@ -198,7 +198,7 @@ def bt_admm(X, rank, n_iter, n_intern1, n_intern2, alpha, alpha2, gamma, lamb, e
     init_barre=copy.deepcopy(init) # We initialize \bar{W}, \bar{H} and \bar{V} 
     tensor_temp=[]
     for j in range(dim):
-        tenseur_temp.append(init[j] * 0) # We initialize matrices called A, B and C in the reference
+        tensor_temp.append(init[j] * 0) # We initialize matrices called A, B and C in the reference
         
     for k in range(n_iter):
         for j in range (dim):
