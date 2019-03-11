@@ -56,7 +56,7 @@ def create_tensor(size_m, n_sources, density, recup=False):
             sol[j].append(v_temp.tolist()[0])
             res_temp = np.array([[res_temp * i][0] for i in v_temp.ravel()])
         tens_temp.append(res_temp)
-    res = tensor_temp[0]
+    res = tens_temp[0]
     for i in range (1, n_sources):
         res += tens_temp[i]
     res [res > 1] = 1
@@ -183,7 +183,7 @@ def rebuild_tensor(X):
         for j in range (dim - 3, -1, -1):
             res_temp = np.array([[res_temp * i][0] for i in X[j][:, i]])
         tensor_temp.append(res_temp)
-    res = tens_temp[0]
+    res = tensor_temp[0]
     for i in range (1, rank):
         res += temp_temp[i]
     res [res > 1] = 1
