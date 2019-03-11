@@ -213,6 +213,7 @@ def bt_admm(X, rank, n_iter, n_intern1, n_intern2, alpha, alpha2, gamma, lamb, r
                     init_barre[j] = init_barre[j] - alpha * (- gamma * (np.dot(unfold_tensor[j] * omega_W_H, KR_product))\
                                     + gamma * np.dot(psi_W_H, KR_product) - rho * (init[j] - init_barre[j] + tensor_temp[j]))
                 for intern2 in range (n_intern2):
+                    print(np.max(init[j]))
                     init[j] = init[j] - alpha2 * (lamb * (init[j] - 3 * init[j]**2 + 2 * init[j]**3) + rho\
                                                  * (init[j] - init_barre[j] + tensor_temp[j]))
                 tensor_temp[j] = tensor_temp[j] + init[j] - init_barre[j]
