@@ -161,7 +161,7 @@ def t_pnl_pf(X, rank, n_iter, gamma, lamb, eps, init = False, normalize_opt = Fa
     return (init)
 
 
-def bt_admm(X, rank, n_iter, n_intern1, n_intern2, alpha, alpha2, gamma, lamb, eps, init = False, normalize_opt = False):
+def bt_admm(X, rank, n_iter, n_intern1, n_intern2, alpha, alpha2, gamma, lamb, rho, eps, init = False, normalize_opt = False):
     ''' 
     Factorize a n order binary tensor into n binary matrices 
 
