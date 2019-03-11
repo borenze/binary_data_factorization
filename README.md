@@ -15,17 +15,9 @@ Dependencies:
  
 
 ```shell
-pip install numpy scipy 
+pip install numpy scipy scikit-learn
 ```
 
-
-### Install using `pip`
-
-You can find this package in the Python package index and install it using `pip`
-
-```bash
-pip install [project_name]
-````
 
 ### Install from sources
 
@@ -62,4 +54,4 @@ The main function included in this package is `c_pnl_pf`. `c_pnl_pf` receives a 
 W, H = BMF.c_pnl_pf(X, rank=3)
 ```
 
-A more detailed documentation can be found in [link].
+
