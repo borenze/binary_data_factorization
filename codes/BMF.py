@@ -195,9 +195,9 @@ def pf_zhang(X ,rank ,lamb ,nbiter=20, W_ini=False, H_ini=False, eps=10**(-1), e
     '''
 
     if (W_ini == False or H_ini == False):
-        W_ini, H_ini, thash = non_negative_factorization(X, n_components=rank, solver='mu')
+        W_ini, H_ini, thash = non_negative_factorization(X, n_components = rank, solver = 'mu')
     
-    W, H= normalization(W_ini,H_ini)
+    W, H= utils.normalization(W_ini, H_ini)
     
     for i in range (nbiter):
         H *= (np.dot(X.T, W) + 3 * lamb * H**2) / (np.dot(np.dot(H, W.T), W) + 2 * lamb * H**3 + lamb * H + esp_nn)
