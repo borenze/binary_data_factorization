@@ -167,6 +167,7 @@ def thresholding(X, rank = False, W_ini = False, H_ini = False):
         return 
     if (W_ini == False or H_ini == False):
         W_ini, H_ini, thash = non_negative_factorization(X, n_components=rank, solver='mu')
+    W_ini, H_ini = utils.normalization(W_ini, H_ini)
     II = np.max(H_ini)
     testh = np.linspace(0, II, int((II - 0) / 0.01))
     ll = np.max(W_ini)
