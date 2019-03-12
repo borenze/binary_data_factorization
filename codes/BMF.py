@@ -162,7 +162,7 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False):
 def thresholding(X, rank = False, W_ini = False, H_ini = False):
     ''' Algorithm of thresholding from Binary Matrix Factorization with Applications by Zhang
     '''
-    if (rank == False and (W_ini == False or H_ini == False):
+    if (rank == False and (W_ini == False or H_ini == False)):
         print(" You have to put initializations or a rank")
         break
     if (W_ini == False or H_ini == False):
