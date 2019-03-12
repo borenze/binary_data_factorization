@@ -159,7 +159,7 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False):
     return (W,H)
 
 
-def thresholding(X, W_ini == False, H_ini == False):
+def thresholding(X, W_ini = False, H_ini = False):
     ''' Algorithm of thresholding from Binary Matrix Factorization with Applications by Zhang
     '''
     if (W_ini == False or H_ini == False):
