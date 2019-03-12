@@ -159,9 +159,11 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False):
     return (W,H)
 
 
-def thresholding(X, W_ini, H_ini):
+def thresholding(X, W_ini == False, H_ini == False):
     ''' Algorithm of thresholding from Binary Matrix Factorization with Applications by Zhang
     '''
+    if (W_ini == False or H_ini == False):
+        W_ini, H_ini, thash = non_negative_factorization(X, n_components=rank, solver='mu')
     II = np.max(H_ini)
     testh = np.linspace(0, II, int((II - 0) / 0.01))
     ll = np.max(W_ini)
