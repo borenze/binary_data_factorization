@@ -164,7 +164,7 @@ def thresholding(X, rank = False, W_ini = False, H_ini = False):
     '''
     if (rank == False and (W_ini == False or H_ini == False)):
         print(" You have to put initializations or a rank")
-        break
+        return 
     if (W_ini == False or H_ini == False):
         W_ini, H_ini, thash = non_negative_factorization(X, n_components=rank, solver='mu')
     II = np.max(H_ini)
