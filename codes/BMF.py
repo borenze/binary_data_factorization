@@ -109,7 +109,7 @@ def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_
     
     return X_noise
     
-def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False):
+def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False, cost_result = False):
     ''' 
     Factorize a binary matrix into two binary matrices 
 
@@ -132,6 +132,8 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False):
     W_ini : initialised matrix
 
     H_ini : initialised matrix
+    
+    cost_result : if true return a list with the evolution of the cost function
 
     '''
 
@@ -140,23 +142,49 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False):
         W_ini, H_ini, thash = non_negative_factorization(X, n_components=rank, solver='mu')
 
     W, H = utils.normalization(W_ini, H_ini)
+    
+    if cost_result == True:
+        res_cost = []
+        for i in range (n_iter):
+            WH = np.dot(W, H.T)
+            omega_W_H = utils.calcul_exp_v(WH, gamma, 0.5) * (utils.sigmaf_v(WH, gamma, 0.5)**2)
+            psi_W_H = omega_W_H * utils.sigmaf_v(WH, gamma, 0.5)
 
-    for i in range (n_iter):
-        WH = np.dot(W, H.T)
-        omega_W_H = utils.calcul_exp_v(WH, gamma, 0.5) * (utils.sigmaf_v(WH, gamma, 0.5)**2)
-        psi_W_H = omega_W_H * utils.sigmaf_v(WH, gamma, 0.5)
+            mat_sum_H = np.array([sum(H).tolist() for i in range(W.shape[0])])
+            mat_sum_W = np.array([sum(W).tolist() for i in range(H.shape[0])])
+            sum_W_H = sum(np.dot(W, H.T).ravel())
+            
+            res_cost.append(1/2 * utils.frobenius(X, utils.sigmaf_v(WH, gamma, 0.5)) + 1/2 * utils.frobenius(H, H**2) + 1/2 * utils.frobenius(W, W**2) + beta * 1 / sum(WH.ravel()))
+            
 
-        mat_sum_H = np.array([sum(H).tolist() for i in range(W.shape[0])])
-        mat_sum_W = np.array([sum(W).tolist() for i in range(H.shape[0])])
-        sum_W_H = sum(np.dot(W, H.T).ravel())
+            H *= (gamma * np.dot((X * omega_W_H).T, W) + 3 * lamb * H**2 + beta * mat_sum_W / (sum_W_H**2)) / (gamma * np.dot(psi_W_H.T, W) + 2 * lamb * H**3 + lamb * H)
 
-        H *= (gamma * np.dot((X * omega_W_H).T, W) + 3 * lamb * H**2 + beta * mat_sum_W / (sum_W_H**2)) / (gamma * np.dot(psi_W_H.T, W) + 2 * lamb * H**3 + lamb * H)
+            W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2)) / (gamma * np.dot(psi_W_H, H) + 2 * lamb * W**3 + lamb * W)
+        
+    
+    
+        H = utils.threshold(H, 0.5)
+        W = utils.threshold(W, 0.5)
+        return (W, H, res_cost)
+    else:
+        for i in range (n_iter):
+            WH = np.dot(W, H.T)
+            omega_W_H = utils.calcul_exp_v(WH, gamma, 0.5) * (utils.sigmaf_v(WH, gamma, 0.5)**2)
+            psi_W_H = omega_W_H * utils.sigmaf_v(WH, gamma, 0.5)
 
-        W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2)) / (gamma * np.dot(psi_W_H, H) + 2 * lamb * W**3 + lamb * W)
+            mat_sum_H = np.array([sum(H).tolist() for i in range(W.shape[0])])
+            mat_sum_W = np.array([sum(W).tolist() for i in range(H.shape[0])])
+            sum_W_H = sum(np.dot(W, H.T).ravel())     
 
-    H = utils.threshold(H, 0.5)
-    W = utils.threshold(W, 0.5)
-    return (W,H)
+            H *= (gamma * np.dot((X * omega_W_H).T, W) + 3 * lamb * H**2 + beta * mat_sum_W / (sum_W_H**2)) / (gamma * np.dot(psi_W_H.T, W) + 2 * lamb * H**3 + lamb * H)
+
+            W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2)) / (gamma * np.dot(psi_W_H, H) + 2 * lamb * W**3 + lamb * W)
+        
+    
+    
+        H = utils.threshold(H, 0.5)
+        W = utils.threshold(W, 0.5)
+        return (W, H)
 
 
 def thresholding(X, rank = False, W_ini = False, H_ini = False):
