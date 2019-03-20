@@ -145,6 +145,7 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False, 
     
     if cost_result == True:
         res_cost = []
+        res_cost_adequacy = []
         for i in range (n_iter):
             WH = np.dot(W, H.T)
             omega_W_H = utils.calcul_exp_v(WH, gamma, 0.5) * (utils.sigmaf_v(WH, gamma, 0.5)**2)
@@ -154,8 +155,8 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False, 
             mat_sum_W = np.array([sum(W).tolist() for i in range(H.shape[0])])
             sum_W_H = sum(np.dot(W, H.T).ravel())
             
-            res_cost.append(1/2 * utils.frobenius(X, utils.sigmaf_v(WH, gamma, 0.5)) + 1/2 * utils.frobenius(H, H**2) + 1/2 * utils.frobenius(W, W**2) + beta * 1 / sum(WH.ravel()))
-            
+            res_cost.append(1/2 * utils.frobenius(X, utils.sigmaf_v(WH, gamma, 0.5)) + 1/2 * lamb * utils.frobenius(H, H**2) + 1/2 * lamb * utils.frobenius(W, W**2) + beta * 1 / sum(WH.ravel()))
+            res_cost_adequacy.append(1/2 * utils.frobenius(X, utils.sigmaf_v(WH, gamma, 0.5)))
 
             H *= (gamma * np.dot((X * omega_W_H).T, W) + 3 * lamb * H**2 + beta * mat_sum_W / (sum_W_H**2)) / (gamma * np.dot(psi_W_H.T, W) + 2 * lamb * H**3 + lamb * H)
 
@@ -165,7 +166,7 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False, 
         if threshold == True:
             H = utils.threshold(H, 0.5)
             W = utils.threshold(W, 0.5)
-        return (W, H, res_cost)
+        return (W, H, res_cost, res_cost_adequacy)
     
     else:
         for i in range (n_iter):
