@@ -109,7 +109,7 @@ def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_
     
     return X_noise
     
-def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False, cost_result = False):
+def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False, cost_result = False, threshold = True):
     ''' 
     Factorize a binary matrix into two binary matrices 
 
@@ -162,9 +162,9 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False, 
             W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2)) / (gamma * np.dot(psi_W_H, H) + 2 * lamb * W**3 + lamb * W)
         
     
-    
-        H = utils.threshold(H, 0.5)
-        W = utils.threshold(W, 0.5)
+        if threshold == True:
+            H = utils.threshold(H, 0.5)
+            W = utils.threshold(W, 0.5)
         return (W, H, res_cost)
     
     else:
@@ -182,9 +182,9 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False, 
             W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2)) / (gamma * np.dot(psi_W_H, H) + 2 * lamb * W**3 + lamb * W)
         
     
-    
-        H = utils.threshold(H, 0.5)
-        W = utils.threshold(W, 0.5)
+        if threshold == True:
+            H = utils.threshold(H, 0.5)
+            W = utils.threshold(W, 0.5)
         return (W, H)
 
 
