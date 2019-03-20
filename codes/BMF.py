@@ -166,6 +166,7 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini=False, H_ini=False, 
         H = utils.threshold(H, 0.5)
         W = utils.threshold(W, 0.5)
         return (W, H, res_cost)
+    
     else:
         for i in range (n_iter):
             WH = np.dot(W, H.T)
