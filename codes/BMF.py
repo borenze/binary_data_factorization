@@ -109,7 +109,7 @@ def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_
     
     return X_noise
     
-def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini='False', H_ini='False', cost_result = False, threshold = True):
+def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini = None, H_ini = None, cost_result = False, threshold = True):
     ''' 
     Factorize a binary matrix into two binary matrices 
 
@@ -138,7 +138,7 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini='False', H_ini='Fals
     '''
 
 
-    if (W_ini == False or H_ini == False):
+    if (W_ini == None or H_ini == None):
         W_ini, H_ini, thash = non_negative_factorization(X, n_components=rank, solver='mu')
 
     W, H = utils.normalization(W_ini, H_ini)
