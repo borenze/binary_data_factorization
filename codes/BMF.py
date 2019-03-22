@@ -51,7 +51,7 @@ def create_quick_matrix(n_rows, n_columns, n_sources, density, recup=False, opt_
     else: return (X, W, H)
     
 
-def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_start = True, recup_generated_matrices = False, opt_print = False, increasing_gamma=0):
+def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_start = True, recup_generated_matrices = False, opt_print = False):
     '''
     Create a numpy matrix from sources generate randomly
     (each elements of sources and abundances are a result of a 
@@ -109,7 +109,7 @@ def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_
     
     return X_noise
     
-def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini = [], H_ini = [], cost_result = False, threshold = True):
+def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini = [], H_ini = [], cost_result = False, threshold = True, increasing_gamma = 0):
     ''' 
     Factorize a binary matrix into two binary matrices 
 
