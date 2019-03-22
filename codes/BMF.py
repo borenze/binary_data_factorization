@@ -51,7 +51,7 @@ def create_quick_matrix(n_rows, n_columns, n_sources, density, recup=False, opt_
     else: return (X, W, H)
     
 
-def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_start = True, recup_generated_matrices = False, opt_print = False):
+def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_start = True, recup_generated_matrices = False, opt_print = False, increasing_gamma=0):
     '''
     Create a numpy matrix from sources generate randomly
     (each elements of sources and abundances are a result of a 
@@ -161,7 +161,8 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini = [], H_ini = [], co
             H *= (gamma * np.dot((X * omega_W_H).T, W) + 3 * lamb * H**2 + beta * mat_sum_W / (sum_W_H**2)) / (gamma * np.dot(psi_W_H.T, W) + 2 * lamb * H**3 + lamb * H)
 
             W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2)) / (gamma * np.dot(psi_W_H, H) + 2 * lamb * W**3 + lamb * W)
-    
+            gamma += increasing_gamma
+            gamma = min(gamma, 5)
         if threshold == True:
             H = utils.threshold(H, 0.5)
             W = utils.threshold(W, 0.5)
@@ -180,7 +181,8 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini = [], H_ini = [], co
             H *= (gamma * np.dot((X * omega_W_H).T, W) + 3 * lamb * H**2 + beta * mat_sum_W / (sum_W_H**2)) / (gamma * np.dot(psi_W_H.T, W) + 2 * lamb * H**3 + lamb * H)
 
             W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2)) / (gamma * np.dot(psi_W_H, H) + 2 * lamb * W**3 + lamb * W)
-        
+            gamma += increasing_gamma
+            gamma = min(gamma, 5)
     
         if threshold == True:
             H = utils.threshold(H, 0.5)
