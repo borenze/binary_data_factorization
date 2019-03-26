@@ -8,7 +8,7 @@ import sys
 if not sys.warnoptions:
     warnings.simplefilter("ignore")
 
-def create_quick_matrix(n_rows, n_columns, n_sources, density, recup=False, opt_print=True):
+def create_quick_matrix(n_rows, n_columns, n_sources, density, recup = False, opt_print = True):
     '''
     Create a numpy matrix from sources generate randomly
     (each elements of sources and abundances are a result of a 
@@ -190,13 +190,13 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini = [], H_ini = [], co
         return (W, H)
 
 
-def thresholding(X, rank = False, W_ini = False, H_ini = False):
+def thresholding(X, rank = 0, W_ini = [], H_ini = []):
     ''' Algorithm of thresholding from Binary Matrix Factorization with Applications by Zhang
     '''
-    if (rank == False and (W_ini == False or H_ini == False)):
+    if (rank == 0 and (W_ini == [] or H_ini == [])):
         print(" You have to put initializations or a rank")
         return 
-    if (W_ini == False or H_ini == False):
+    if (W_ini == [] or H_ini == []):
         W_ini, H_ini, thash = non_negative_factorization(X, n_components=rank, solver='mu')
     W_ini, H_ini = utils.normalization(W_ini, H_ini)
     II = np.max(H_ini)
