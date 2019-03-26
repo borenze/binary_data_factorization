@@ -11,7 +11,7 @@ if not sys.warnoptions:
 def create_quick_matrix(n_rows, n_columns, n_sources, density, recup = False, opt_print = True):
     '''
     Create a numpy matrix from sources generate randomly
-    (each elements of sources and abundances are a result of a 
+    (each element of sources and abundances are the result of a 
     Bernoulli)
     
     
@@ -31,12 +31,25 @@ def create_quick_matrix(n_rows, n_columns, n_sources, density, recup = False, op
     
     opt_print : if True print the percent of ones 
     in the resulted matrix (default = True)
-    
+
     Examples
     --------
     
-    >>> X = create_quick_matrix(50, 50, 3, 0.4)
-    >>> X, W, H = create_quick_matrix(500, 100, 8, 0.2, recup = True)
+    >>> from codes import *
+    >>> X = BMF.create_quick_matrix(50, 50, 3, 0.4)
+    >>> X, W, H = BMF.create_quick_matrix(500, 100, 8, 0.2, recup = True)
+    
+    Returns
+    -------
+    
+    X : array-like, shape (n_rows, n_columns)
+        Result Matrix.
+        
+    W : array-like, shape (n_rows, n_sources)
+        Source Matrix.
+    
+    H : array-like, shape (n_sources, n_columns)
+        Abundance Matrix.
     
     '''
     
@@ -75,24 +88,35 @@ def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_
     
     recup_start : if True you get noiseless matrix if False you don't (default = True)
     
-    Returns
-    -------
-    X_noise : a matrix 
-    
-    X : a matrix (if recup_start == True)
-    
-    W, H : two matrices (if recup_generated_matrices == True)
     
     Examples
     --------
     
-    >>> X_noise, X = create_noise_matrix_xor(50, 50, 3, 0.4, 0.1)
+    >>> from codes import *
+    >>> X_noise, X = BMF.create_noise_matrix_xor(50, 50, 3, 0.4, 0.1)
     >>> X_noise, X, W, H = create_noise_matrix_xor(500, 100, 8, 0.2, noise=0.3, recup_generated_matrices = True, opt_print = True)
     
+    Returns
+    -------
+    
+    X : array-like, shape (n_rows, n_columns)
+        Noiseless Matrix.
+        
+    X_noise : array-like, shape (n_rows, n_columns)
+        Noise Matrix.
+        
+    W : array-like, shape (n_rows, n_sources)
+        Source Matrix.
+    
+    H : array-like, shape (n_sources, n_columns)
+        Abundance Matrix.
     '''
+    
     if recup_generated_matrices == True:
         X, W, H = create_quick_matrix(n_rows, n_columns, n_sources, density, recup = True, opt_print = False)
+    
     else: X = create_quick_matrix(n_rows, n_columns, n_sources, density, opt_print = False)
+    
     if opt_print == True:
         print("The noiseless matrix have",round(sum(X.ravel())/(n_rows * n_columns) * 100, 2), "% of ones.")
     noise= np.random.choice([0, 1], size=(X.shape[0],X.shape[1]), p=[1-noise, noise])
@@ -109,7 +133,7 @@ def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_
     
     return X_noise
     
-def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini = [], H_ini = [], cost_result = False, threshold = True, increasing_gamma = 0):
+def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini = [], H_ini = [], cost_result = False, threshold = True):
     ''' 
     Factorize a binary matrix into two binary matrices 
 
@@ -133,7 +157,11 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini = [], H_ini = [], co
 
     H_ini : initialised matrix
     
-    cost_result : if true return a list with the evolution of the cost function
+    cost_result : if True return a list with the evolution of the cost function
+    
+    threshold : if True the returned matrices are threshold to binary 
+    
+    
 
     '''
 
@@ -154,19 +182,16 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini = [], H_ini = [], co
             mat_sum_H = np.array([sum(H).tolist() for i in range(W.shape[0])])
             mat_sum_W = np.array([sum(W).tolist() for i in range(H.shape[0])])
             sum_W_H = sum(np.dot(W, H.T).ravel())
-            
             res_cost.append(1/2 * utils.frobenius(X, utils.sigmaf_v(WH, gamma, 0.5)) + 1/2 * lamb * utils.frobenius(H, H**2) + 1/2 * lamb * utils.frobenius(W, W**2) + beta * 1 / sum(WH.ravel()))
-            res_cost_adequacy.append(1/2 * utils.frobenius(X, utils.sigmaf_v(WH, gamma, 0.5)))
-
+            
             H *= (gamma * np.dot((X * omega_W_H).T, W) + 3 * lamb * H**2 + beta * mat_sum_W / (sum_W_H**2)) / (gamma * np.dot(psi_W_H.T, W) + 2 * lamb * H**3 + lamb * H)
 
             W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2)) / (gamma * np.dot(psi_W_H, H) + 2 * lamb * W**3 + lamb * W)
-            gamma += increasing_gamma
-            gamma = min(gamma, 5)
+         
         if threshold == True:
             H = utils.threshold(H, 0.5)
             W = utils.threshold(W, 0.5)
-        return (W, H, res_cost, res_cost_adequacy)
+        return (W, H, res_cost)
     
     else:
         for i in range (n_iter):
