@@ -94,8 +94,10 @@ def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_
     
     >>> from codes import *
     >>> X_noise, X = BMF.create_noise_matrix_xor(50, 50, 3, 0.4, 0.1)
-    >>> X_noise, X, W, H = create_noise_matrix_xor(500, 100, 8, 0.2, noise=0.3, recup_generated_matrices = True, opt_print = True)
-    
+    >>> X_noise, X, W, H = BMF.create_noise_matrix_xor(500, 100, 8, 0.2, noise=0.3, recup_generated_matrices = True,
+        opt_print = True)
+        
+        
     Returns
     -------
     
@@ -133,7 +135,7 @@ def create_noise_matrix_xor(n_rows, n_columns, n_sources, density, noise, recup_
     
     return X_noise
     
-def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini = [], H_ini = [], cost_result = False, threshold = True):
+def c_pnl_pf(X, rank, n_iter, lamb, beta, eps, gamma = 5 W_ini = [], H_ini = [], cost_result = False, threshold = True):
     ''' 
     Factorize a binary matrix into two binary matrices 
 
@@ -145,13 +147,13 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini = [], H_ini = [], co
 
     n_iter : maximum of iterations if our stop criteron is not satisfied
 
-    gamma : curvature modifier for sigmoid function
-
     lamb : binary penalty
 
     beta : maximal support penalty
 
     eps : tolerated error for stop criteron
+    
+    gamma : curvature modifier for sigmoid function
 
     W_ini : initialised matrix
 
@@ -161,6 +163,12 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini = [], H_ini = [], co
     
     threshold : if True the returned matrices are threshold to binary 
     
+    Examples
+    --------
+    
+    >>> from codes import *
+    >>> X_noise, X = BMF.create_noise_matrix_xor(50, 50, 3, 0.4, 0.1)
+    >>> W, H = BMF.c_pnl_pf (X_noise, rank = 3, n_iter = 10, lamb = 10, beta = 0, eps = 10**(-8)) 
     
 
     '''
@@ -206,8 +214,6 @@ def c_pnl_pf(X, rank, n_iter, gamma, lamb, beta, eps, W_ini = [], H_ini = [], co
             H *= (gamma * np.dot((X * omega_W_H).T, W) + 3 * lamb * H**2 + beta * mat_sum_W / (sum_W_H**2)) / (gamma * np.dot(psi_W_H.T, W) + 2 * lamb * H**3 + lamb * H)
 
             W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2)) / (gamma * np.dot(psi_W_H, H) + 2 * lamb * W**3 + lamb * W)
-            gamma += increasing_gamma
-            gamma = min(gamma, 5)
     
         if threshold == True:
             H = utils.threshold(H, 0.5)
