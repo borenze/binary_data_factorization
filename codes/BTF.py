@@ -13,7 +13,7 @@ if not sys.warnoptions:
     warnings.simplefilter("ignore")
     
     
-def create_tensor(size_m, n_sources, density, recup=False):
+def create_tensor(size_m, n_sources, density, recup = False):
     ''' create a N-way array from any number of sources generate via Bernoulli
     Parameters
     ----------
@@ -28,14 +28,14 @@ def create_tensor(size_m, n_sources, density, recup=False):
     
     Returns
     -------
-    res : a N-way array (N=n_sources)
+    res : a N-way array (N = n_sources)
     
-    sol : a list of matrices (if recup==True)
+    sol : a list of matrices (if recup == True)
     
     Examples
     --------
     >>> res = create_tensor([50, 100, 140], 4, 0.4)
-    >>> res2, sol = create_tensor([10, 15, 20, 25], 3, 0.1, recup=True)
+    >>> res2, sol = create_tensor([10, 15, 20, 25], 3, 0.1, recup = True)
     '''
     dim = len(size_m)
     tens_temp = []
@@ -50,7 +50,7 @@ def create_tensor(size_m, n_sources, density, recup=False):
         sol[dim-1].append(v_end.tolist()[0])
         sol[dim-2].append(v_end_1.tolist()[0])
         
-        for j in range (dim-3,-1,-1):
+        for j in range (dim-3, -1, -1):
             v_temp = np.random.choice([0,1], size = (1, size_m[j]), p = [1 - density, density])
             v_temp = v_temp.astype(float)
             sol[j].append(v_temp.tolist()[0])
@@ -85,15 +85,15 @@ def unfolding(X, mode):
     >>> unfold3 = unfolding(X, 2)
     '''
     
-    if mode==0:
+    if mode == 0:
         tensor_unfold = np.zeros((X.shape[0], X.shape[1] * X.shape[2]))
         for i in range (X.shape[2]):
             tensor_unfold[:, i * X.shape[1] : (i + 1) * X.shape[1]] = X[:, :, i]
-    if mode==1:
+    if mode == 1:
         tensor_unfold = np.zeros((X.shape[1], X.shape[0] * X.shape[2]))
         for i in range (X.shape[2]):
             tensor_unfold[:, i * X.shape[0]:(i+1) * X.shape[0]]=X[:, :, i].T
-    if mode==2:
+    if mode == 2:
         tensor_unfold = np.zeros((X.shape[2], X.shape[0] * X.shape[1]))
         for i in range (X.shape[2]):
             tensor_unfold[i, :] = X[:, :, i].T.ravel()
@@ -135,7 +135,7 @@ def t_pnl_pf(X, rank, n_iter, gamma, lamb, eps, init = False, normalize_opt = Fa
     if normalize_opt == True:
         for i in range (dim):
             for j in range (rank):
-                init[i][:,j] = init[i][:,j]/np.max(init[i][:,j])
+                init[i][:, j] = init[i][:, j] / np.max(init[i][:, j])
                 # this option hightly denature our init structure
     unfold_tensor = [unfolding(X, i) for i in range (dim)]               
 
