@@ -266,6 +266,7 @@ def pf_zhang(X ,rank ,lamb ,nbiter=20, W_ini=False, H_ini=False, eps=10**(-1), e
         W_ini, H_ini, thash = non_negative_factorization(X, n_components = rank, solver = 'mu')
     
     W, H= utils.normalization(W_ini, H_ini)
+    X = X.astype(float)
     W = W.astype(float)
     H = H.astype(float)
     for i in range (nbiter):
