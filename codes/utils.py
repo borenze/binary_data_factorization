@@ -103,8 +103,8 @@ def normalization(W, H):
 		H = H.T
 		if W.shape[1]!=H.shape[0]:
 			return("Matrix dimensions do not agree, please check that X = np.dot(W, H) or X = np.dot(W, H.T)")
-	ind = np.where(sum(utils.diag_max(W)) = 0)
-	ind2 = np.where(sum(utils.diag_max(H.T)) = 0)
+	ind = np.where(sum(utils.diag_max(W)) = 0))
+	ind2 = np.where(sum(utils.diag_max(H.T)) = 0))
 	W[ind[0], ind[0]] = 0.01
 	H[ind2[0], ind2[0]] = 0.01
 	W_norm = np.dot(np.dot(W, inv(sqrt(diag_max(W, axe = 0)))), sqrt(diag_max(H, axe = 1)))
