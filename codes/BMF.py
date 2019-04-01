@@ -257,7 +257,7 @@ def signstar(a, param):
     b [a >= param] =1
     return b
     
-def pf_zhang(X ,rank ,lamb ,nbiter=20, W_ini=False, H_ini=False, eps=10**(-1), esp_nn=10e-8, n_ini=1):
+def pf_zhang(X ,rank ,lamb ,nbiter=10, W_ini=False, H_ini=False, eps=10**(-1), esp_nn=10e-8, n_ini=1):
     '''
     Algorithm from Binary Matrix Factorization with Applications
     '''
@@ -270,7 +270,7 @@ def pf_zhang(X ,rank ,lamb ,nbiter=20, W_ini=False, H_ini=False, eps=10**(-1), e
     W = W.astype(float)
     H = H.astype(float)
     for i in range (nbiter):
-        print(i)
+
         H *= (np.dot(X.T, W) + 3 * lamb * H**2) / (np.dot(np.dot(H, W.T), W) + 2 * lamb * H**3 + lamb * H + esp_nn)
         W *= (np.dot(X, H) + 3 * lamb * W**2) / (np.dot(np.dot(W, H.T), H) + 2 * lamb * W**3 + lamb * W + esp_nn)
 
