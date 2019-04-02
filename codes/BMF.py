@@ -278,7 +278,6 @@ def pf_zhang(X ,rank ,lamb ,nbiter=10, W_ini=False, H_ini=False, eps=10**(-1), e
             W = utils.threshold(W, 0.5)
             H = utils.threshold(H, 0.5)            
             return (W,H)
-        lamb = 10 * lamb
 
     W = utils.threshold(W, 0.5)
     H = utils.threshold(H, 0.5)  
