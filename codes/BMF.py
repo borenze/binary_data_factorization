@@ -173,7 +173,8 @@ def c_pnl_pf(X, rank, n_iter, lamb, beta, eps, gamma = 5, W_ini = [], H_ini = []
 
     '''
 
-
+    # here we define a parameter to forbid devide by zero
+    epsilon_non_zero = 10**(-8)
     if (W_ini == [] or H_ini == []):
         W_ini, H_ini, thash = non_negative_factorization(X, n_components=rank, solver='mu')
 
@@ -190,11 +191,11 @@ def c_pnl_pf(X, rank, n_iter, lamb, beta, eps, gamma = 5, W_ini = [], H_ini = []
             mat_sum_H = np.array([sum(H).tolist() for i in range(W.shape[0])])
             mat_sum_W = np.array([sum(W).tolist() for i in range(H.shape[0])])
             sum_W_H = sum(np.dot(W, H.T).ravel())
-            res_cost.append(1/2 * utils.frobenius(X, utils.sigmaf_v(WH, gamma, 0.5)) + 1/2 * lamb * utils.frobenius(H, H**2) + 1/2 * lamb * utils.frobenius(W, W**2) + beta * 1 / sum(WH.ravel()))
+            res_cost.append(1/2 * utils.frobenius(X, utils.sigmaf_v(WH, gamma, 0.5)) + 1/2 * lamb * utils.frobenius(H, H**2) + 1/2 * lamb * utils.frobenius(W, W**2) + beta * 1 / sum(WH.ravel())) + epsilon_non_zero
             
-            H *= (gamma * np.dot((X * omega_W_H).T, W) + 3 * lamb * H**2 + beta * mat_sum_W / (sum_W_H**2)) / (gamma * np.dot(psi_W_H.T, W) + 2 * lamb * H**3 + lamb * H)
+            H *= (gamma * np.dot((X * omega_W_H).T, W) + 3 * lamb * H**2 + beta * mat_sum_W / (sum_W_H**2 + epsilon_non_zero)) / (gamma * np.dot(psi_W_H.T, W) + 2 * lamb * H**3 + lamb * H + epsilon_non_zero)
 
-            W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2)) / (gamma * np.dot(psi_W_H, H) + 2 * lamb * W**3 + lamb * W)
+            W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2 + epsilon_non_zero)) / (gamma * np.dot(psi_W_H, H) + 2 * lamb * W**3 + lamb * W + epsilon_non_zero)
          
         if threshold == True:
             H = utils.threshold(H, 0.5)
@@ -211,9 +212,10 @@ def c_pnl_pf(X, rank, n_iter, lamb, beta, eps, gamma = 5, W_ini = [], H_ini = []
             mat_sum_W = np.array([sum(W).tolist() for i in range(H.shape[0])])
             sum_W_H = sum(np.dot(W, H.T).ravel())     
 
-            H *= (gamma * np.dot((X * omega_W_H).T, W) + 3 * lamb * H**2 + beta * mat_sum_W / (sum_W_H**2)) / (gamma * np.dot(psi_W_H.T, W) + 2 * lamb * H**3 + lamb * H)
+            H *= (gamma * np.dot((X * omega_W_H).T, W) + 3 * lamb * H**2 + beta * mat_sum_W / (sum_W_H**2 + epsilon_non_zero)) / (gamma * np.dot(psi_W_H.T, W) + 2 * lamb * H**3 + lamb * H + epsilon_non_zero)
 
-            W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2)) / (gamma * np.dot(psi_W_H, H) + 2 * lamb * W**3 + lamb * W)
+            W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2 + epsilon_non_zero)) / (gamma * np.dot(psi_W_H, H) + 2 * lamb * W**3 + lamb * W + epsilon_non_zero)
+
     
         if threshold == True:
             H = utils.threshold(H, 0.5)
