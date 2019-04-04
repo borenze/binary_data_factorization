@@ -284,3 +284,28 @@ def pf_zhang(X ,rank ,lamb ,nbiter=10, W_ini=False, H_ini=False, eps=10**(-1), e
     W = utils.threshold(W, 0.5)
     H = utils.threshold(H, 0.5)  
     return (W, H)
+
+
+def pf_threshold (X, rank, n_iter, lamb, beta, th=1, W_ini = [], H_ini = []):
+    epsilon_non_zero = 10**(-8)
+    if (W_ini == [] or H_ini == []):
+        W_ini, H_ini, thash = non_negative_factorization(X, n_components=rank, solver='mu')
+
+    W, H = utils.normalization(W_ini, H_ini)
+    for i in range (n_iter):
+        WH = np.dot(W, H.T)
+        gradient = 0.5 / (th - 0.5)
+        D_W_H = WH * 0
+        D_W_H [WH < th] = gradient
+        H *= (np.dot((X * D_W_H).T, W) + 3 * lamb * H**2) / (np.dot((WH * D_W_H).T, W) + 2 * lamb * H**3 + lamb * H + epsilon_non_zero)
+        W *= (np.dot((X * D_W_H), H) + 3 * lamb * W**2) / (np.dot(WH * D_W_H, H) + 2 * lamb * W**3 + lamb * W + epsilon_non_zero)
+    H = utils.threshold(H, 0.5)
+    W = utils.threshold(W, 0.5)
+    return (W, H)
+
+
+
+
+
+
+
