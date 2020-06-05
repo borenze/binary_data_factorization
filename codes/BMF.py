@@ -170,7 +170,13 @@ def c_pnl_pf(X, rank, n_iter, lamb, beta, eps, gamma = 5, W_ini = [], H_ini = []
     >>> X_noise, X = BMF.create_noise_matrix_xor(50, 50, 3, 0.4, 0.1)
     >>> W, H = BMF.c_pnl_pf (X_noise, rank = 3, n_iter = 10, lamb = 10, beta = 0, eps = 10**(-8)) 
     
-
+    Returns
+    -------
+        
+    W : array-like. Source Matrix.
+    
+    H : array-like. Abundance Matrix.
+    
     '''
 
     # here we define a parameter to forbid devide by zero
@@ -198,6 +204,9 @@ def c_pnl_pf(X, rank, n_iter, lamb, beta, eps, gamma = 5, W_ini = [], H_ini = []
             res_cost.append(1/2 * utils.frobenius(X, utils.sigmaf_v(WH, gamma, 0.5)) + 1/2 * lamb * utils.frobenius(H, H**2) + 1/2 * lamb * utils.frobenius(W, W**2) + beta * 1 / sum(WH.ravel()))
           
             if (abs(res_cost[i] - res_cost[i-1]) < eps:
+                if threshold == True:
+                    H = utils.threshold(H, 0.5)
+                    W = utils.threshold(W, 0.5)
                 return (W, H, res_cost)
             
         
@@ -223,6 +232,9 @@ def c_pnl_pf(X, rank, n_iter, lamb, beta, eps, gamma = 5, W_ini = [], H_ini = []
             W *= (gamma * np.dot((X * omega_W_H), H) + 3 * lamb * W**2 + beta * mat_sum_H / (sum_W_H**2 + epsilon_non_zero)) / (gamma * np.dot(psi_W_H, H) + 2 * lamb * W**3 + lamb * W + epsilon_non_zero)
             res_cost.append(1/2 * utils.frobenius(X, utils.sigmaf_v(WH, gamma, 0.5)) + 1/2 * lamb * utils.frobenius(H, H**2) + 1/2 * lamb * utils.frobenius(W, W**2) + beta * 1 / sum(WH.ravel()))
             if (abs(res_cost[i] - res_cost[i-1]) < eps:
+                if threshold == True:
+                    H = utils.threshold(H, 0.5)
+                    W = utils.threshold(W, 0.5)
                 return (W, H)
 
     
